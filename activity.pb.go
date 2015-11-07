@@ -7,6 +7,7 @@ Package users is a generated protocol buffer package.
 
 It is generated from these files:
 	activity.proto
+	errors.proto
 	picture.proto
 	provider.proto
 	user.proto
