@@ -33,4 +33,7 @@ message User {
   Relationship relationship   = 8;
   bool         suspended      = 9;
   bool         deleted        = 10;
+
+  // Request Properties ONLY
+
 }
