@@ -1,0 +1,23 @@
+syntax = "proto3";
+package users;
+
+import "user.proto";
+
+message Provider {
+
+  enum Providers {
+    STANDARD    = 0;
+    FACEBOOK    = 1;
+    TWITTER     = 2;
+    GOOGLE      = 3;
+    LINKEDIN    = 4;
+  }
+
+  int64     Id          = 1;
+  User      user        = 2;
+  Providers provider    = 3;
+  string    username    = 4;
+  string    password    = 5;
+  string    provider_id = 6;
+  bool      deleted     = 7;
+}

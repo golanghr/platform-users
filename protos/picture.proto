@@ -1,0 +1,12 @@
+syntax = "proto3";
+package users;
+
+import "user.proto";
+
+message Picture {
+  int64  id         = 1;
+  User   user       = 2;
+  string picture    = 3;
+  bool   default    = 4;
+  bool   deleted    = 5;
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package users;
+
+import "user.proto";
+import "provider.proto";
+
+message Activity {
+  enum Status {
+    UNKNOWN   = 0;
+    ONLINE    = 1;
+    OFFLINE   = 2;
+    IDLE      = 3;
+  }
+
+  int64    id         = 1;
+  User     user       = 2;
+  Provider provider   = 3;
+  Status   status     = 4;
+  string   timestamp  = 5;
+}

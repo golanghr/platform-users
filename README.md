@@ -5,7 +5,7 @@
 [![Go 1.5 Ready](https://img.shields.io/badge/Go%201.5-Ready-green.svg?style=flat)]()
 
 # Platform Users
-Platform users is a [Golang.hr Platform] micro extension designed to handle everything related to users.
+Platform users is a [Golang.hr Platform] micro service designed to handle everything related to users.
 
 **TBD - This is still in drawing mode so bare with us...**
 
