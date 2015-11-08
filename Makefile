@@ -1,4 +1,4 @@
-NAME := "platform-users"
+NAME = platform-users
 
 GO ?= go
 PROTOC ?= protoc
