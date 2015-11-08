@@ -5,9 +5,33 @@
 package users
 
 import proto "github.com/golang/protobuf/proto"
+import platform "github.com/golanghr/platform"
+
+import (
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
+)
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+
+// Request from public import service.proto
+type Request platform.Request
+
+func (m *Request) Reset()         { (*platform.Request)(m).Reset() }
+func (m *Request) String() string { return (*platform.Request)(m).String() }
+func (*Request) ProtoMessage()    {}
+
+// Response from public import service.proto
+type Response platform.Response
+
+func (m *Response) Reset()         { (*platform.Response)(m).Reset() }
+func (m *Response) String() string { return (*platform.Response)(m).String() }
+func (*Response) ProtoMessage()    {}
 
 type User_Gender int32
 
@@ -64,40 +88,98 @@ func (x User_Relationship) String() string {
 	return proto.EnumName(User_Relationship_name, int32(x))
 }
 
-type Geo struct {
-	Latitude  int64 `protobuf:"varint,1,opt,name=latitude" json:"latitude,omitempty"`
-	Longitude int64 `protobuf:"varint,2,opt,name=longitude" json:"longitude,omitempty"`
-}
-
-func (m *Geo) Reset()         { *m = Geo{} }
-func (m *Geo) String() string { return proto.CompactTextString(m) }
-func (*Geo) ProtoMessage()    {}
-
 type User struct {
 	Id           int64             `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
 	Email        string            `protobuf:"bytes,2,opt,name=email" json:"email,omitempty"`
 	FirstName    string            `protobuf:"bytes,3,opt,name=first_name" json:"first_name,omitempty"`
 	LastName     string            `protobuf:"bytes,4,opt,name=last_name" json:"last_name,omitempty"`
 	Dob          string            `protobuf:"bytes,5,opt,name=dob" json:"dob,omitempty"`
-	Geo          *Geo              `protobuf:"bytes,6,opt,name=geo" json:"geo,omitempty"`
+	Geo          *User_Geo         `protobuf:"bytes,6,opt,name=geo" json:"geo,omitempty"`
 	Gender       User_Gender       `protobuf:"varint,7,opt,name=gender,enum=users.User_Gender" json:"gender,omitempty"`
 	Relationship User_Relationship `protobuf:"varint,8,opt,name=relationship,enum=users.User_Relationship" json:"relationship,omitempty"`
-	Suspended    bool              `protobuf:"varint,9,opt,name=suspended" json:"suspended,omitempty"`
-	Deleted      bool              `protobuf:"varint,10,opt,name=deleted" json:"deleted,omitempty"`
+	PhoneNumber  string            `protobuf:"bytes,9,opt,name=phone_number" json:"phone_number,omitempty"`
+	Suspended    bool              `protobuf:"varint,10,opt,name=suspended" json:"suspended,omitempty"`
+	Deleted      bool              `protobuf:"varint,11,opt,name=deleted" json:"deleted,omitempty"`
 }
 
 func (m *User) Reset()         { *m = User{} }
 func (m *User) String() string { return proto.CompactTextString(m) }
 func (*User) ProtoMessage()    {}
 
-func (m *User) GetGeo() *Geo {
+func (m *User) GetGeo() *User_Geo {
 	if m != nil {
 		return m.Geo
 	}
 	return nil
 }
 
+type User_Geo struct {
+	Latitude  int64 `protobuf:"varint,1,opt,name=latitude" json:"latitude,omitempty"`
+	Longitude int64 `protobuf:"varint,2,opt,name=longitude" json:"longitude,omitempty"`
+}
+
+func (m *User_Geo) Reset()         { *m = User_Geo{} }
+func (m *User_Geo) String() string { return proto.CompactTextString(m) }
+func (*User_Geo) ProtoMessage()    {}
+
 func init() {
 	proto.RegisterEnum("users.User_Gender", User_Gender_name, User_Gender_value)
 	proto.RegisterEnum("users.User_Relationship", User_Relationship_name, User_Relationship_value)
+}
+
+// Client API for Users service
+
+type UsersClient interface {
+	SignIn(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
+}
+
+type usersClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewUsersClient(cc *grpc.ClientConn) UsersClient {
+	return &usersClient{cc}
+}
+
+func (c *usersClient) SignIn(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error) {
+	out := new(platform.Response)
+	err := grpc.Invoke(ctx, "/users.Users/SignIn", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for Users service
+
+type UsersServer interface {
+	SignIn(context.Context, *platform.Request) (*platform.Response, error)
+}
+
+func RegisterUsersServer(s *grpc.Server, srv UsersServer) {
+	s.RegisterService(&_Users_serviceDesc, srv)
+}
+
+func _Users_SignIn_Handler(srv interface{}, ctx context.Context, buf []byte) (interface{}, error) {
+	in := new(platform.Request)
+	if err := proto.Unmarshal(buf, in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(UsersServer).SignIn(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+var _Users_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "users.Users",
+	HandlerType: (*UsersServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SignIn",
+			Handler:    _Users_SignIn_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{},
 }
