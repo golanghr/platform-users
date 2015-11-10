@@ -14,13 +14,20 @@ It is generated from these files:
 
 It has these top-level messages:
 	Activity
+	Picture
+	Provider
+	User
 */
 package users
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 type Activity_Status int32
 
@@ -75,5 +82,6 @@ func (m *Activity) GetProvider() *Provider {
 }
 
 func init() {
+	proto.RegisterType((*Activity)(nil), "users.Activity")
 	proto.RegisterEnum("users.Activity_Status", Activity_Status_name, Activity_Status_value)
 }

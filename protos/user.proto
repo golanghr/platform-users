@@ -2,10 +2,15 @@ syntax = "proto3";
 
 package users;
 
-import public "service.proto";
+import "github.com/golanghr/platform/protos/service.proto";
 
 service Users {
   rpc SignIn (platform.Request) returns (platform.Response) {}
+  rpc SignOut (platform.Request) returns (platform.Response) {}
+  rpc Register (platform.Request) returns (platform.Response) {}
+  rpc Recover (platform.Request) returns (platform.Response) {}
+
+  rpc Profile (platform.Request) returns (platform.Response) {}
 }
 
 message User {

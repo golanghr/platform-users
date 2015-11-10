@@ -5,10 +5,9 @@ PROTOC ?= protoc
 
 PROTOCFLAGS = --go_out=plugins=grpc:.
 PROTOSPATH = protos
-PLATFORMPROTOPATH = $(shell locate golanghr/platform/protos)
+PLATFORMPROTOPATH = $(GOPATH)/src
 PROTOS = protos/*.proto
-
-GOPATH := $(CURDIR):$(GOPATH)
+#GOPATH := $(CURDIR):$(GOPATH)
 
 all: build
 

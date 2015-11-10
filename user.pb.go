@@ -5,7 +5,9 @@
 package users
 
 import proto "github.com/golang/protobuf/proto"
-import platform "github.com/golanghr/platform"
+import fmt "fmt"
+import math "math"
+import platform "github.com/golanghr/platform/protos"
 
 import (
 	context "golang.org/x/net/context"
@@ -13,25 +15,9 @@ import (
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-// Request from public import service.proto
-type Request platform.Request
-
-func (m *Request) Reset()         { (*platform.Request)(m).Reset() }
-func (m *Request) String() string { return (*platform.Request)(m).String() }
-func (*Request) ProtoMessage()    {}
-
-// Response from public import service.proto
-type Response platform.Response
-
-func (m *Response) Reset()         { (*platform.Response)(m).Reset() }
-func (m *Response) String() string { return (*platform.Response)(m).String() }
-func (*Response) ProtoMessage()    {}
+var _ = fmt.Errorf
+var _ = math.Inf
 
 type User_Gender int32
 
@@ -123,14 +109,24 @@ func (m *User_Geo) String() string { return proto.CompactTextString(m) }
 func (*User_Geo) ProtoMessage()    {}
 
 func init() {
+	proto.RegisterType((*User)(nil), "users.User")
+	proto.RegisterType((*User_Geo)(nil), "users.User.Geo")
 	proto.RegisterEnum("users.User_Gender", User_Gender_name, User_Gender_value)
 	proto.RegisterEnum("users.User_Relationship", User_Relationship_name, User_Relationship_value)
 }
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
 
 // Client API for Users service
 
 type UsersClient interface {
 	SignIn(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
+	SignOut(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
+	Register(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
+	Recover(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
+	Profile(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error)
 }
 
 type usersClient struct {
@@ -150,22 +146,110 @@ func (c *usersClient) SignIn(ctx context.Context, in *platform.Request, opts ...
 	return out, nil
 }
 
+func (c *usersClient) SignOut(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error) {
+	out := new(platform.Response)
+	err := grpc.Invoke(ctx, "/users.Users/SignOut", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) Register(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error) {
+	out := new(platform.Response)
+	err := grpc.Invoke(ctx, "/users.Users/Register", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) Recover(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error) {
+	out := new(platform.Response)
+	err := grpc.Invoke(ctx, "/users.Users/Recover", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) Profile(ctx context.Context, in *platform.Request, opts ...grpc.CallOption) (*platform.Response, error) {
+	out := new(platform.Response)
+	err := grpc.Invoke(ctx, "/users.Users/Profile", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Users service
 
 type UsersServer interface {
 	SignIn(context.Context, *platform.Request) (*platform.Response, error)
+	SignOut(context.Context, *platform.Request) (*platform.Response, error)
+	Register(context.Context, *platform.Request) (*platform.Response, error)
+	Recover(context.Context, *platform.Request) (*platform.Response, error)
+	Profile(context.Context, *platform.Request) (*platform.Response, error)
 }
 
 func RegisterUsersServer(s *grpc.Server, srv UsersServer) {
 	s.RegisterService(&_Users_serviceDesc, srv)
 }
 
-func _Users_SignIn_Handler(srv interface{}, ctx context.Context, buf []byte) (interface{}, error) {
+func _Users_SignIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
 	in := new(platform.Request)
-	if err := proto.Unmarshal(buf, in); err != nil {
+	if err := dec(in); err != nil {
 		return nil, err
 	}
 	out, err := srv.(UsersServer).SignIn(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _Users_SignOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(platform.Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(UsersServer).SignOut(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _Users_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(platform.Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(UsersServer).Register(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _Users_Recover_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(platform.Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(UsersServer).Recover(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _Users_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(platform.Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(UsersServer).Profile(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -179,6 +263,22 @@ var _Users_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignIn",
 			Handler:    _Users_SignIn_Handler,
+		},
+		{
+			MethodName: "SignOut",
+			Handler:    _Users_SignOut_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _Users_Register_Handler,
+		},
+		{
+			MethodName: "Recover",
+			Handler:    _Users_Recover_Handler,
+		},
+		{
+			MethodName: "Profile",
+			Handler:    _Users_Profile_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{},

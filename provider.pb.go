@@ -5,9 +5,13 @@
 package users
 
 import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 type Provider_Providers int32
 
@@ -39,7 +43,7 @@ func (x Provider_Providers) String() string {
 }
 
 type Provider struct {
-	Id         int64              `protobuf:"varint,1,opt" json:"Id,omitempty"`
+	Id         int64              `protobuf:"varint,1,opt,name=Id" json:"Id,omitempty"`
 	User       *User              `protobuf:"bytes,2,opt,name=user" json:"user,omitempty"`
 	Provider   Provider_Providers `protobuf:"varint,3,opt,name=provider,enum=users.Provider_Providers" json:"provider,omitempty"`
 	Username   string             `protobuf:"bytes,4,opt,name=username" json:"username,omitempty"`
@@ -60,5 +64,6 @@ func (m *Provider) GetUser() *User {
 }
 
 func init() {
+	proto.RegisterType((*Provider)(nil), "users.Provider")
 	proto.RegisterEnum("users.Provider_Providers", Provider_Providers_name, Provider_Providers_value)
 }
